@@ -9,12 +9,15 @@
         $scope.getResults = function () {
           $log.log("test");
           var userInput = $scope.url;
-          $http.post('/start', {'url': userInput}).success(function (results) {
-            getWordCount(results);
-            $log.log(results)
-          }).error(function (error) {
-            $log.log(error)
-          });
+          $http.post('/start', {'url': userInput})
+            .success(function (results) {
+              getWordCount(results);
+
+              $log.log(results)
+            })
+            .error(function (error) {
+              $log.log(error)
+            });
 
         };
         function getWordCount(jobID) {
@@ -28,6 +31,7 @@
                 $log.log(data, status);
               } else if (status === 200) {
                 $log.log(data);
+                $scope.wordcounts = data;
                 $timeout.cancel(timeout);
                 return false;
               }
