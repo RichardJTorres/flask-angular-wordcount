@@ -3,6 +3,7 @@ import requests
 import nltk
 import re
 import operator
+import json
 from collections import Counter
 from bs4 import BeautifulSoup
 from rq import Queue
@@ -12,19 +13,16 @@ from stop_words import stops
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask import Flask, render_template, request, jsonify
 
-
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 q = Queue(connection=conn)
 
-
 from models import *
 
 
 def count_and_save_words(url):
-
     errors = []
 
     try:
@@ -81,6 +79,21 @@ def index():
     return render_template('index.html', results=results)
 
 
+@app.route('/start', methods=['POST'])
+def get_counts():
+    # get url
+    data = json.loads(request.data.decode())
+    url = data["url"]
+    if 'http://' not in url[:7]:
+        url = 'http://' + url
+    # start job
+    job = q.enqueue_call(
+        func=count_and_save_words, args=(url,), result_ttl=5000
+    )
+    # return created job id
+    return job.get_id()
+
+
 @app.route("/results/<job_key>", methods=['GET'])
 def get_results(job_key):
     job = Job.fetch(job_key, connection=conn)
@@ -95,6 +108,7 @@ def get_results(job_key):
         return jsonify(results)
     else:
         return "Nay!", 202
+
 
 if __name__ == '__main__':
     app.run()
