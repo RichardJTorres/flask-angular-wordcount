@@ -56,3 +56,9 @@ docs/_build/
 
 #pycharm
 .idea/
+
+#node
+node_modules/
+
+#bower
+/static/bower_components/

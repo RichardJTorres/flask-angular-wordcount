@@ -1,0 +1,22 @@
+{
+  "name": "flask-by-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RichardJTorres/flask-angular-wordcount.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RichardJTorres/flask-angular-wordcount/issues"
+  },
+  "homepage": "https://github.com/RichardJTorres/flask-angular-wordcount#readme",
+  "devDependencies": {
+    "bower": "^1.7.9"
+  }
+}
