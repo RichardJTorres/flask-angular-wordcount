@@ -8,22 +8,28 @@
       function ($scope, $log, $http, $timeout) {
         $scope.submitButtonText = 'Submit';
         $scope.loading = false;
+        $scope.urlerror = false;
         $scope.getResults = function () {
           $log.log("test");
           var userInput = $scope.url;
           $http.post('/start', {'url': userInput})
             .success(function (results) {
               getWordCount(results);
+              $scope.urlerror = false;
               $scope.wordcounts = null;
               $scope.loading = true;
               $scope.submitButtonText = 'Loading...';
               $log.log(results)
             })
             .error(function (error) {
-              $log.log(error)
+              $log.log(error);
+              $scope.loading = false;
+              $scope.submitButtonText = 'Submit';
+              $scope.urlerror = true;
             });
 
         };
+        
         function getWordCount(jobID) {
 
           var timeout = "";
@@ -49,7 +55,6 @@
           poller();
         }
       }
-
 
     ]);
 
